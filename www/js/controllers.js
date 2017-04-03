@@ -1,4 +1,4 @@
-angular.module('starter.controllers', [])
+angular.module('starter.controllers', ['ngCordova'])
 
 .controller('DashCtrl', function($scope, $http) {
   
@@ -7,9 +7,33 @@ angular.module('starter.controllers', [])
   	};
 })
 
-.controller('myCtrl', function($scope, $http) {
-	    $scope.firstName = "John";
-	    $scope.lastName = "Doe";
+.controller('myCtrl', function($scope, $http, $cordovaCamera) {
+    $scope.firstName = "John";
+    $scope.lastName = "Doe";
+
+	$scope.take_photo =  function () {
+	    var options = {
+	      quality: 100,
+	      destinationType: Camera.DestinationType.DATA_URL,
+	      sourceType: Camera.PictureSourceType.CAMERA,
+	      allowEdit: true,
+	      encodingType: Camera.EncodingType.JPEG,
+	      targetWidth: 800,
+	      targetHeight: 800,
+	      popoverOptions: CameraPopoverOptions,
+	      saveToPhotoAlbum: true,
+		  correctOrientation:true
+	    };
+
+	    $cordovaCamera.getPicture(options).then(function(imageData) {
+	      var image = document.getElementById('myImage');
+	      image.src = "data:image/jpeg;base64," + imageData;
+	    }, function(err) {
+	      // error
+	    });
+
+	};
+
 	$scope.fun = function () {
 		$http({
 			method: 'GET',
