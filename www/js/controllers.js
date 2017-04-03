@@ -31,7 +31,21 @@ angular.module('starter.controllers', ['ngCordova'])
 	    }, function(err) {
 	      // error
 	    });
+	};
 
+	$scope.get_photo = function () {
+	    var options = {
+	      destinationType: Camera.DestinationType.FILE_URI,
+	      sourceType: Camera.PictureSourceType.CAMERA,
+	    };
+
+	    $cordovaCamera.getPicture(options).then(function(imageURI) {
+	      var image = document.getElementById('myImage');
+	      image.src = imageURI;
+	    }, function(err) {
+	      // error
+	    });
+	    // $cordovaCamera.cleanup().then(...); // only for FILE_URI
 	};
 
 	$scope.fun = function () {
