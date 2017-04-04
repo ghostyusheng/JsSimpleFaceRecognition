@@ -1,6 +1,6 @@
-<ion-view view-title="Chats">
-  <ion-content>
-    <ion-list>
+<ion-view view-title="人脸识别">
+  
+    <!-- <ion-list>
       <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="chat in chats" type="item-text-wrap" href="#/tab/chats/{{chat.id}}">
         <img ng-src="{{chat.face}}">
         <h2>{{chat.name}}</h2>
@@ -11,6 +11,21 @@
           Delete
         </ion-option-button>
       </ion-item>
-    </ion-list>
+    </ion-list> -->
+     <ion-content overflow-scroll="true" style="overflow: hidden;">
+        <div class="plus" >
+          <a href="">
+           <!--  <img class="imgpl" src="img/plus1.png" alt="" data-ng-click="take_photo()"> -->
+           <button class="button icon-left ion-camera button-assertive pohoto-styl" data-ng-click="take_photo()">请拍照</button>
+           <button class="button icon-right ion-chevron-right button-calm pohoto-styl">开始识别</button>
+            
+          </a>
+        </div>
+       
+          <div class="item itmeclass">
+           <img id="myImage" src="" alt="" >
+      </div>
+    
+      
   </ion-content>
 </ion-view>

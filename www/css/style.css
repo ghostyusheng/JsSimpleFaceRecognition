@@ -1,1 +1,27 @@
 /* Empty. Add your own CSS if you like */
+.homeContent{
+	margin-top: 50px;
+}
+
+
+
+.plus{
+	margin: 0 auto;
+	text-align: center;
+}
+.plus .pohoto-styl{
+	margin: 20px auto;
+	text-align: center;"
+
+}
+
+.itmeclass{
+	border:none;
+	margin: 0 auto; 
+	text-align: center;
+}
+#myImage{
+	height:300px; 
+	width:300px;
+	border:1px solid red;
+}

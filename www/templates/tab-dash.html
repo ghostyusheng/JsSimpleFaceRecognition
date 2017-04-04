@@ -1,18 +1,23 @@
-<ion-view view-title="Dashboard">
+<ion-view view-title="主页">
   <ion-content class="padding">
-    <h2>Welcome to Ionic</h2>
+  <div class="homeContent">
+    <h3>欢迎{{user}}来到人脸识别Hybrid APP！</h3>
     <p>
-    This is the Ionic starter for tabs-based apps. For other starters and ready-made templates, check out the <a href="http://market.ionic.io/starters" target="_blank">Ionic Market</a>.
+      <label for="">作者：</label>
+      <span>王巍</span>
     </p>
     <p>
-      To edit the content of each tab, edit the corresponding template file in <code>www/templates/</code>. This template is <code>www/templates/tab-dash.html</code>
+      <label for="">版本：</label> 
+      <span>1.0.0</span>
     </p>
     <p>
-    If you need help with your app, join the Ionic Community on the <a href="http://forum.ionicframework.com" target="_blank">Ionic Forum</a>. Make sure to <a href="http://twitter.com/ionicframework" target="_blank">follow us</a> on Twitter to get important updates and announcements for Ionic developers.
+      <label for="">简介：</label>
+      <span>本APP是Hybrid APP，可以运行在Android、IOS上，属于跨平台的混合APP.可以用来识别你的年龄和性别</span>
     </p>
     <p>
-      For help sending push notifications, join the <a href="https://apps.ionic.io/signup" target="_blank">Ionic Platform</a> and check out <a href="http://docs.ionic.io/docs/push-overview" target="_blank">Ionic Push</a>. We also have other services available.
+      <label for="">操作方法：</label>
+      <span>点击中间的tab人脸识别，拍摄照片</span>
     </p>
-    {{5+5}}
+  </div>
   </ion-content>
 </ion-view>
