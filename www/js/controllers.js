@@ -7,7 +7,7 @@ angular.module('starter.controllers', ['ngCordova'])
   	};
 })
 
-.controller('myCtrl', function($scope, $http, $cordovaCamera) {
+.controller('myCtrl', function($scope, $http, $cordovaCamera, $cordovaFileTransfer) {
     $scope.firstName = "John";
     $scope.lastName = "Doe";
 
@@ -48,16 +48,46 @@ angular.module('starter.controllers', ['ngCordova'])
 	    // $cordovaCamera.cleanup().then(...); // only for FILE_URI
 	};
 
-	$scope.fun = function () {
+	// $scope.fun = function () {
+	// 	$http({
+	// 		method: 'POST',
+	// 		url: '/someUrl'
+	// 	}).then(function successCallback(response) {
+	// 			alert('success');
+	// 		}, function errorCallback(response) {
+	// 			alert('failed');
+	// 	});
+	// };
+
+	$scope.face_distinguish = function () {
+		$image_base64 = document.getElementById('myImage').getAttribute('src');
+
 		$http({
-			method: 'GET',
-			url: '/someUrl'
+			method: 'POST',
+			url: 'http://121.42.38.165/face_server/app/Home/Api/face.php',
+			headers:{'Content-Type': 'application/x-www-form-urlencoded'}, 
+			// params: {
+			// 	image_base64 : $image_base64
+			// }
+			data: {
+				'image_base64': $image_base64
+			},
+			transformRequest: function(obj) {  
+		     var str = [];  
+		     for(var p in obj){  
+		       str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));  
+		     }  
+		     return str.join("&");  
+		   }  
 		}).then(function successCallback(response) {
 				// 请求成功执行代码
+				console.log(response);
+				alert(JSON.stringify(response));
 			}, function errorCallback(response) {
 				// 请求失败执行代码
 		});
 	};
+
 })
 
 
