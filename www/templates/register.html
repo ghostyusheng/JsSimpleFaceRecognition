@@ -1,0 +1,46 @@
+<ion-view title="注册">
+  <ion-content>
+    <div class="bar bar-header-assertive ">
+            </div>
+             <div class="content has-header">
+                <form ng-submit="onSubmit(myForm)" name="myForm" novalidate>
+                    <div class="list">
+                        <div class="item-input-inset">
+                            <label class="item-input-wrapper">
+                                <i class="icon ion-person assertive"></i>
+                                <input type="text" name="username" id="username" ng-model="username" placeholder="用户名" required>
+                                <div ng-show="myForm.username.$invalid && submitted">
+                                    <div style="color:red" ng-show="myForm.username.$error.required">用户名是必须的</div>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="item-input-inset">
+                            <label class="item-input-wrapper">
+                                <i class="icon ion-locked assertive"></i>
+                                <input type="password" name="password1" ng-model="password1" required id="password1" placeholder="密码">
+                                <div ng-show="myForm.password1.$invalid && submitted">
+                                    <div style="color:red" ng-show="myForm.password1.$error.required">密码是必须的</div>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="item-input-inset">
+                            <label class="item-input-wrapper">
+                                <i class="icon ion-locked assertive"></i>
+                                <input type="password" name="password2" ng-model="password2" id="password2" required placeholder="确认密码">
+                                <div ng-show="myForm.password2.$invalid && submitted">
+                                    <div style="color:red" ng-show="myForm.password2.$error.required">确认密码是必须的</div>
+                                </div>
+                                <div ng-show="myForm.password2.$valid">
+                                    <div style="color:red" ng-show="password1!=password2">两次密码输入不一致</div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="padding">
+                        <button class="button button-full button-assertive" type="submit" ng-disabled="myForm.user.$invalid||myForm.password1.$invalid ||myForm.password2.$invalid ||password1!=password2" ">注册</button>
+                    </div>
+                    <a class="padding"  href="#/flogin">已注册，去登录&gt;&gt;</a>
+        </form>
+    </div>
+  </ion-content>
+</ion-view>

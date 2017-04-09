@@ -25,6 +25,20 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
 .config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
 
+
+ 		$ionicConfigProvider.platform.ios.tabs.style('standard'); 
+        $ionicConfigProvider.platform.ios.tabs.position('bottom');
+        $ionicConfigProvider.platform.android.tabs.style('standard');
+        $ionicConfigProvider.platform.android.tabs.position('standard');
+
+        $ionicConfigProvider.platform.ios.navBar.alignTitle('center'); 
+        $ionicConfigProvider.platform.android.navBar.alignTitle('left');
+
+        $ionicConfigProvider.platform.ios.backButton.previousTitleText('').icon('ion-ios-arrow-thin-left');
+        $ionicConfigProvider.platform.android.backButton.previousTitleText('').icon('ion-android-arrow-back');        
+
+        $ionicConfigProvider.platform.ios.views.transition('ios'); 
+        $ionicConfigProvider.platform.android.views.transition('android');
   // Ionic uses AngularUI Router which uses the concept of states
   // Learn more here: https://github.com/angular-ui/ui-router
   // Set up the various states which the app can be in.
@@ -86,7 +100,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
   .state('flogin', {
     url: '/flogin',
-    templateUrl: 'flogin.html'
+    templateUrl: 'flogin.html',
+    controller: 'floginCtrl'
+  })
+
+  .state('register', {
+    url: '/register',
+    templateUrl: 'templates/register.html',
+    controller: 'registerCtrl'
   });
 
   $ionicConfigProvider.views.maxCache(0);
@@ -94,6 +115,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
   //--------------------
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/dash');
+  // $urlRouterProvider.otherwise('/tab/dash');
+  $urlRouterProvider.otherwise('/flogin');
 
 });
