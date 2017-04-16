@@ -2,6 +2,31 @@ angular.module('starter.controllers', ['ngCordova'])
 
 .controller('DashCtrl', function($scope, $http) {
 
+        var param={};
+     $http({
+            method: 'GET',
+            url: 'http://www.weather.com.cn/data/sk/101310201.html',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            data:param,
+            transformRequest: function(obj) {
+                var str = [];
+                for (var p in obj) {
+                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                }
+                return str.join("&");
+            }
+            }).then(function successCallback(response) {
+                // alert(response);
+                console.log(response);
+                document.getElementById("city").innerText=response.data.weatherinfo.city;
+                document.getElementById("temp").innerText=response.data.weatherinfo.temp;
+                document.getElementById("SD").innerText=response.data.weatherinfo.SD;
+                document.getElementById("WD").innerText=response.data.weatherinfo.WD;
+
+            }, function errorCallback(response) {
+                // 请求失败执行代码
+                layer.msg('服务器出错！');
+            });
     
 })
 
@@ -80,21 +105,10 @@ angular.module('starter.controllers', ['ngCordova'])
 
         };
 
-        $scope.share_sms = function() {
-        	$cordovaSocialSharing
-		    .shareViaSMS('111', '13023150103')
-		    .then(function(result) {
-		      // Success!
-		    }, function(err) {
-		      // An error occurred. Show a message to the user
-		    });
-        }
-
-
         $scope.face_distinguish = function() {
 
             $image_base64 = document.getElementById('myImage').getAttribute('src');
-
+            layer.load(1);
             $http({
                 method: 'POST',
                 url: 'http://121.42.38.165/face_server/app/Home/Api/face.php',
@@ -113,7 +127,7 @@ angular.module('starter.controllers', ['ngCordova'])
                     return str.join("&");
                 }
             }).then(function successCallback(response) {
-                
+
                 // 请求成功执行代码
                 // console.log(response);
                 //  layer.msg('Hello layer');
@@ -158,7 +172,7 @@ angular.module('starter.controllers', ['ngCordova'])
                     + '是否微笑：' + smile + '<br/>' 
                     + '皮肤质量：' + facequalityValue + '<br/>'
                 });
-
+                layer.closeAll('loading');
                 $scope.save_user_info(age, sex, ethnicity, glass, smile, facequalityValue);
                 
             }, function errorCallback(response) {
@@ -308,7 +322,21 @@ angular.module('starter.controllers', ['ngCordova'])
 .controller('SettingCtrl', function($scope, $cordovaSocialSharing) {
 
     $scope.share_sms = function() {
-        var phone =prompt('分享的号码？', '');
+        // var phone =prompt('请输入想分享的号码：', '');
+            layer.prompt({title:"请输入想分享的号码"},function(phone, index){
+
+                 if (phone) {
+                    $cordovaSocialSharing
+                    .shareViaSMS('小伙伴你好，我的人脸结果是xxx，你也快来参与吧', phone)
+                    .then(function(result) {
+                      // Success!
+                    }, function(err) {
+                      // An error occurred. Show a message to the user
+                    });
+                }
+              // layer.msg('得到了'+phone);
+              // layer.close(index);
+            });
 
         if (phone) {
             $cordovaSocialSharing
