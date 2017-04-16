@@ -88,10 +88,21 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 	views: {
 	  'tab-account': {
 		templateUrl: 'templates/tab-account.html',
-		controller: 'DashCtrl'
+		controller: 'AccountCtrl'
 	  }
 	}
   })
+
+  .state('tab.setting', {
+	url: '/setting',
+	views: {
+	  'tab-setting': {
+		templateUrl: 'templates/tab-setting.html',
+		controller: 'SettingCtrl'
+	  }
+	}
+  })
+
 
   .state('index', {
     url: '/',

@@ -2,12 +2,10 @@ angular.module('starter.controllers', ['ngCordova'])
 
 .controller('DashCtrl', function($scope, $http) {
 
-    var fun = function() {
-        alert('1');
-    };
+    
 })
 
-.controller('myCtrl', function($scope, $http, $cordovaCamera,$cordovaImagePicker,$cordovaFileTransfer, $cordovaFile) {
+.controller('myCtrl', function($scope, $http, $cordovaCamera,$cordovaImagePicker,$cordovaFileTransfer, $cordovaFile, $cordovaSocialSharing) {
        
 
         $scope.take_photo = function() {
@@ -82,6 +80,16 @@ angular.module('starter.controllers', ['ngCordova'])
 
         };
 
+        $scope.share_sms = function() {
+        	$cordovaSocialSharing
+		    .shareViaSMS('111', '13023150103')
+		    .then(function(result) {
+		      // Success!
+		    }, function(err) {
+		      // An error occurred. Show a message to the user
+		    });
+        }
+
 
         $scope.face_distinguish = function() {
 
@@ -105,6 +113,7 @@ angular.module('starter.controllers', ['ngCordova'])
                     return str.join("&");
                 }
             }).then(function successCallback(response) {
+                
                 // 请求成功执行代码
                 // console.log(response);
                 //  layer.msg('Hello layer');
@@ -119,7 +128,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 var smileValue = response.data.faces[0].attributes.smile.value;
                 var facequalityValue = response.data.faces[0].attributes.facequality.value;
                 //微笑分析
-                var smile
+                var smile;
                 if (smileValue > 30.1) {
                     smile = "Smile";
                 } else {
@@ -138,7 +147,7 @@ angular.module('starter.controllers', ['ngCordova'])
                 		glass="普通眼镜";
                 		break;
                 	}
-                	
+
                 //弹层显示分析结果
                 layer.open({
                     title: '分析结果',
@@ -147,14 +156,53 @@ angular.module('starter.controllers', ['ngCordova'])
                     + '您的种族是：' + ethnicity + '<br/>' 
                     + '是否佩戴眼镜：' + glass + '<br/>' 
                     + '是否微笑：' + smile + '<br/>' 
-                    + '皮肤质量：' + facequalityValue + '<br/>',
+                    + '皮肤质量：' + facequalityValue + '<br/>'
                 });
 
+                $scope.save_user_info(age, sex, ethnicity, glass, smile, facequalityValue);
+                
             }, function errorCallback(response) {
                 // 请求失败执行代码
                 layer.msg('服务器出错！');
             });
         };
+
+        $scope.save_user_info = function (age, sex, ethnicity, glass, smile, facequalityValue) {
+            var username = localStorage.getItem("username");
+
+            var param = {
+                'username' : username,
+                'sex'      : sex,
+                'age'      : age,
+                'ethnicity' : ethnicity,
+                'wearGlass'  : glass,
+                'isSmile' : smile,
+                'skinQuality' : facequalityValue
+            };
+
+            // console.log(param);
+
+            $http({
+            method: 'POST',
+            url: 'http://121.42.38.165/face_server/app/Admin/Api/doSaveFaceInfo.php',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            data: param,
+            transformRequest: function(obj) {
+                var str = [];
+                for (var p in obj) {
+                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                }
+                return str.join("&");
+            }
+            }).then(function successCallback(response) {
+                // console.log(response);
+                // alert(JSON.stringify(response));
+
+            }, function errorCallback(response) {
+                // 请求失败执行代码
+                layer.msg('服务器出错！');
+            });
+        }
 
     })
     .controller('floginCtrl', ['$scope', '$http', function($scope, $http) {
@@ -166,31 +214,28 @@ angular.module('starter.controllers', ['ngCordova'])
                      username: form.username.$viewValue,
                 	 password: form.password.$viewValue
                 }
-                // $http.post('http://121.42.38.165/face_server/app/Admin/Api/doLogin.php', param)
-                //     .success(function(data) {
-                //        layer.msg('登录成功！');
-                // 	window.location.href('../index.html');
-                //     })
-                //     .error(function(data) {
-                //     	 layer.msg('登录失败！');
-                //         console.log('登录失败！');
-                //     });
 
-                $http({
-                method: 'POST',
-                url: 'http://121.42.38.165/face_server/app/Admin/Api/doLogin.php',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                data: param,
-                transformRequest: function(obj) {
-                    var str = [];
-                    for (var p in obj) {
-                        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-                    }
-                    return str.join("&");
+            $http({
+            method: 'POST',
+            url: 'http://121.42.38.165/face_server/app/Admin/Api/doLogin.php',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            data: param,
+            transformRequest: function(obj) {
+                var str = [];
+                for (var p in obj) {
+                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
                 }
+                return str.join("&");
+            }
             }).then(function successCallback(response) {
-                layer.msg('登录成功！');
-               window.location.href='#/tab/dash';
+                if (response.data.status == "success") {
+                    localStorage.setItem("username", response.data.data.username);
+                    layer.msg('尊敬的 ' + response.data.data.username 
+                        +   ' 欢迎您！');
+                    window.location.href='#/tab/dash';
+                } else {
+                    layer.msg('登录失败！');
+                }
 
             }, function errorCallback(response) {
                 // 请求失败执行代码
@@ -224,8 +269,14 @@ angular.module('starter.controllers', ['ngCordova'])
                     return str.join("&");
                 }
             }).then(function successCallback(response) {
-                layer.msg('注册成功！');
-                window.location.href='#/flogin.html';
+                    console.log(response);
+
+                if (response.data.status == "success") {
+                    layer.msg('注册成功！');
+                    window.location.href='#/flogin.html';
+                } else {
+                     layer.msg('用户名已存在！');
+                }
 
             }, function errorCallback(response) {
                 // 请求失败执行代码
@@ -254,8 +305,62 @@ angular.module('starter.controllers', ['ngCordova'])
     $scope.chat = Chats.get($stateParams.chatId);
 })
 
-.controller('AccountCtrl', function($scope) {
-    $scope.settings = {
-        enableFriends: true
+.controller('SettingCtrl', function($scope, $cordovaSocialSharing) {
+
+    $scope.share_sms = function() {
+        var phone =prompt('分享的号码？', '');
+
+        if (phone) {
+            $cordovaSocialSharing
+            .shareViaSMS('小伙伴你好，我的人脸结果是xxx，你也快来参与吧', phone)
+            .then(function(result) {
+              // Success!
+            }, function(err) {
+              // An error occurred. Show a message to the user
+            });
+        }
+    }
+
+    $scope.exitApp = function() {
+        ionic.Platform.exitApp();
+    }
+
+})
+
+.controller('AccountCtrl', function($scope, $http) {
+
+    var username = localStorage.getItem("username");
+    // console.log(username);
+
+    var param = {
+        'username' : username
     };
+
+    $http({
+        method: 'POST',
+        url: 'http://121.42.38.165/face_server/app/Admin/Api/doGetFaceInfo.php',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        data: param,
+        transformRequest: function(obj) {
+            var str = [];
+            for (var p in obj) {
+                str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+            }
+            return str.join("&");
+        }
+    }).then(function successCallback(response) {
+        console.log(response);
+        document.getElementById("user").innerText = username;
+        document.getElementById("sex").innerText = response.data.data.sex;
+        document.getElementById("age").innerText = response.data.data.age;
+        document.getElementById("ethnicity").innerText = response.data.data.ethnicity;
+        document.getElementById("wearGlass").innerText = response.data.data.wearGlass;
+        document.getElementById("isSmile").innerText = response.data.data.isSmile;
+        document.getElementById("skinQuality").innerText = response.data.data.skinQuality;
+    }, function errorCallback(response) {
+        layer.msg('服务器出错！');
+    });
+
+
+     // document.getElementById("user").innerText = localStorage.getItem("username");
 });
