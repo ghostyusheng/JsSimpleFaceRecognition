@@ -5,7 +5,7 @@ angular.module('starter.controllers', ['ngCordova'])
         var param={};
      $http({
             method: 'GET',
-            url: 'http://www.weather.com.cn/data/sk/101310201.html',
+            url: 'http://api.map.baidu.com/telematics/v3/weather?location=三亚&output=json&ak=VoEdZ0GA3HIjBQFoTA3Ph0ar',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             data:param,
             transformRequest: function(obj) {
@@ -16,12 +16,12 @@ angular.module('starter.controllers', ['ngCordova'])
                 return str.join("&");
             }
             }).then(function successCallback(response) {
-                // alert(response);
                 console.log(response);
-                document.getElementById("city").innerText=response.data.weatherinfo.city;
-                document.getElementById("temp").innerText=response.data.weatherinfo.temp;
-                document.getElementById("SD").innerText=response.data.weatherinfo.SD;
-                document.getElementById("WD").innerText=response.data.weatherinfo.WD;
+                document.getElementById("city").innerText=response.data.results[0].currentCity;
+                document.getElementById("temp").innerText=response.data.results[0].weather_data[0].temperature;
+                document.getElementById("SD").innerText=response.data.results[0].weather_data[0].weather;
+                document.getElementById("WD").innerText=response.data.results[0].pm25;
+                
 
             }, function errorCallback(response) {
                 // 请求失败执行代码
@@ -108,7 +108,7 @@ angular.module('starter.controllers', ['ngCordova'])
         $scope.face_distinguish = function() {
 
             $image_base64 = document.getElementById('myImage').getAttribute('src');
-            layer.load(1);
+            layer.load(0,{shade: [0.7,'#000']});
             $http({
                 method: 'POST',
                 url: 'http://121.42.38.165/face_server/app/Home/Api/face.php',
@@ -178,6 +178,7 @@ angular.module('starter.controllers', ['ngCordova'])
             }, function errorCallback(response) {
                 // 请求失败执行代码
                 layer.msg('服务器出错！');
+                layer.closeAll('loading');
             });
         };
 
@@ -248,7 +249,7 @@ angular.module('starter.controllers', ['ngCordova'])
                         +   ' 欢迎您！');
                     window.location.href='#/tab/dash';
                 } else {
-                    layer.msg('登录失败！');
+                    layer.msg('用户名或密码错误');
                 }
 
             }, function errorCallback(response) {
